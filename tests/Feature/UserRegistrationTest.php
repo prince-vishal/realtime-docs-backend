@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Faker\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -63,7 +62,7 @@ class UserRegistrationTest extends TestCase
     }
 
     /**
-     * Can register from other source like facebook, without submitting a password
+     * Cannot register from other source like facebook, without submitting a password
      */
     public function test_cannot_register_an_user_using_invalid_source()
     {
