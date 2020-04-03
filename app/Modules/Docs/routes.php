@@ -16,6 +16,7 @@ Route::group(
 
         Route::get('/', 'DocController@allDocs');
         Route::get('/{doc}', 'DocController@show');
+        Route::get('/{doc}/viewers', 'DocController@showViewers');
         Route::post('/', 'DocController@create');
 
 
