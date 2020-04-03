@@ -32,6 +32,11 @@ class UserLoginTest extends TestCase
 
     }
 
+    /**
+     *
+     * Can Login using valid credentials i.e email & password
+     *
+     */
     public function test_can_login_using_credentials()
     {
         $this->withHeader("Accept", "application/json");
@@ -49,6 +54,40 @@ class UserLoginTest extends TestCase
 
     }
 
+    /**
+     * Cannot login using incorrect email or password
+     */
+    public function test_cannot_login_using_invalid_credentials()
+    {
+        $this->withHeader("Accept", "application/json");
+
+        $response = $this->post($this->loginUrl, [
+            'email' => $this->user->email,
+            'password' => $this->faker->password
+        ]);
+        $response->assertStatus(401);
+
+        $response->assertJsonStructure([
+            'error',
+            'success',
+        ]);
+
+        $response = $this->post($this->loginUrl, [
+            'email' => $this->faker->email,
+            'password' => $this->user->password
+        ]);
+        $response->assertStatus(401);
+
+        $response->assertJsonStructure([
+            'error',
+            'success',
+        ]);
+
+    }
+
+    /**
+     * Can Login using OAuth i.e without password, with source and token only
+     */
     public function test_can_login_from_other_credentials()
     {
         $this->withHeader("Accept", "application/json");
@@ -64,6 +103,34 @@ class UserLoginTest extends TestCase
         $data = json_decode($response->getContent(), true);
         $token = $data['access_token'];
 
+        $response = $this->post($this->loginUrl, [
+            'name' => $user['name'],
+            'email' => $user['email'],
+            'source' => $user['source'],
+            'token' => $user['token']
+        ]);
+
+        $response->assertJsonStructure([
+            'access_token',
+            'token_type',
+            'expires_in'
+        ]);
+
+
+    }
+
+    /**
+     * Create a new user while Login using OAuth if the user does not exists
+     *
+     */
+    public function test_can_register_while_sign_in_using_oauth()
+    {
+        $this->withHeader("Accept", "application/json");
+        $user = factory(User::class)->make();
+        $user = $user->toArray();
+        $user['source'] = 'google';
+        $user['token'] = $this->faker->text;
+        unset($user['password']);
 
         $response = $this->post($this->loginUrl, [
             'name' => $user['name'],
@@ -72,7 +139,6 @@ class UserLoginTest extends TestCase
             'token' => $user['token']
         ]);
 
-        dd($response->getContent(), $user);
         $response->assertJsonStructure([
             'access_token',
             'token_type',

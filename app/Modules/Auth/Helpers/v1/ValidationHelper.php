@@ -26,4 +26,15 @@ class ValidationHelper
         ]);
     }
 
+    public function getLoginValidator($data)
+    {
+        return Validator::make($data, [
+            'name' => ['required_without:password', 'string', 'max:255'],
+            'company' => ['string'],
+            'email' => ['required', 'string', 'email', 'max:255'],
+            'source' => ['string', 'in:facebook,google,amazon,linkedin,github'],
+            'password' => ['required_without:source', 'string', 'min:8'],
+            'token' => ['required_with:source', 'string'],
+        ]);
+    }
 }

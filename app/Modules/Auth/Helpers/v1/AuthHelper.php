@@ -40,31 +40,23 @@ class AuthHelper
     }
 
 
+    /**
+     * @param Request $request
+     *
+     * @return mixed
+     */
     public function register(Request $request)
     {
         $this->registrationValidator($request->all())->validate();
 
         event(new Registered($user = $this->create($request->all())));
 
-        $this->guard()->login($user);
+        auth()->login($user);
 
-        if ($response = $this->registered($request, $user)) {
-            return $response;
-        }
+        $response = $this->registered($request, $user);
+        return $response;
 
-        return $request->wantsJson()
-            ? new Response('', 201)
-            : redirect($this->redirectPath());
-    }
 
-    /**
-     * Get the guard to be used during registration.
-     *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
-     */
-    protected function guard()
-    {
-        return Auth::guard();
     }
 
 
@@ -107,14 +99,139 @@ class AuthHelper
         ]);
     }
 
+
     /**
-     * Where to redirect
+     * Get a validator for an incoming registration request.
      *
-     * @return string
+     * @param  array $data
+     *
+     * @return \Illuminate\Contracts\Validation\Validator
      */
-    private function redirectPath()
+    protected function loginValidator(array $data)
     {
-        return "/";
+        return $this->validationHelper->getLoginValidator($data);
+    }
+
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @param  \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function login(Request $request)
+    {
+        $this->loginValidator($request->all())->validate();
+        $credentials = request(['email', 'password']);
+        $token = null;
+        /*
+         * OAuth Login
+         * */
+        if (!isset($credentials['password'])) {
+
+            return $this->oauthLogin($request);
+
+        } else {
+            /*
+             * Login using password
+             *
+             * */
+            if (!$token = auth()->attempt($credentials)) {
+                return response()->json(['error' => 'Invalid Email or password', 'success' => false], 401);
+            }
+        }
+        $response = $this->authenticated($request, $token);
+        return $response;
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
+    private function oauthLogin(Request $request)
+    {
+        $user = User::where([
+            'email' => $request->email,
+        ])->first();
+        if ($user) {
+
+            if ($user->source != $request->source) {
+                return response()->json([
+                    'error' => 'An account already exists with same email and different provider',
+                    'success' => false
+                ], 401);
+
+            }
+
+            $user->oauth_token = $request->token;
+            $user->save();
+            if (!$token = auth()->tokenById($user->id)) {
+                return response()->json(['error' => 'Invalid credentials', 'success' => false], 401);
+            }
+
+        } else {
+            // Register this user
+            return $this->register($request);
+        }
+
+        $response = $this->authenticated($request, $token);
+        return $response;
+
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param Request $request
+     * @param         $token
+     *
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $token)
+    {
+        return $this->respondWithToken($token);
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @param  \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        auth()->logout();
+        $response = $this->loggedOut($request);
+        return $response;
+    }
+
+    /**
+     * The user has logged out of the application.
+     *
+     * @param  \Illuminate\Http\Request $request
+     *
+     * @return mixed
+     */
+    protected function loggedOut(Request $request)
+    {
+        return response()->json(['message' => 'Successfully Logged Out', 'success' => true], 200);
+    }
+
+    /**
+     * @param $token
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
     }
 
 

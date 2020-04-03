@@ -13,6 +13,7 @@ Route::group(
         'middleware' => $guardingMiddleware
     ],
     function () {
+        Route::post('/logout', 'LoginController@logout');
 
     }
 );
@@ -26,6 +27,6 @@ Route::group(
     ],
     function () {
         Route::post('/register', 'RegisterController@register');
-
+        Route::post('/login', 'LoginController@login');
     }
 );
