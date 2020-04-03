@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 $namespace = 'App\Modules\Auth\Controllers\v1';
-$guardingMiddleware = ['auth:api', 'bindings'];
+$guardingMiddleware = ['auth:api', 'bindings','jwt.auth'];
 $prefix = 'auth/v1';
 // Guarded Routes
 Route::group(

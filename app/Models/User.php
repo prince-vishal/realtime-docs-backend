@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Modules\Docs\Models\Doc;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -69,5 +70,14 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+
+    /**
+     * The docs that belong to the user.
+     */
+    public function docs()
+    {
+        return $this->belongsToMany(Doc::class)->withPivot('role_id')->withTimestamps();
     }
 }
