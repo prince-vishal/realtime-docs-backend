@@ -15,7 +15,7 @@ class DocController extends Controller
 
     public function allDocs()
     {
-        $docs = Doc::where(['owner_id' => Auth::id()])->get();
+        $docs = Doc::where(['owner_id' => Auth::id()])->orderBy('updated_at', 'desc')->get();
         return (new SuccessResponse($docs))->send();
     }
 

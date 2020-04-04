@@ -39,7 +39,9 @@ class Doc extends Model
      */
     public function viewers()
     {
-        return $this->belongsToMany(User::class, 'doc_viewers')->withTimestamps();
+        return $this->belongsToMany(User::class, 'doc_viewers')
+            ->withTimestamps()
+            ->orderBy('doc_viewers.updated_at', 'desc');
     }
 
 }
