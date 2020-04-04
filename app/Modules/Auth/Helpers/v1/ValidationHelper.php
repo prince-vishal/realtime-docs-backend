@@ -19,10 +19,10 @@ class ValidationHelper
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'source' => ['string', 'in:facebook,google,amazon,linkedin,github'],
+            'source' => ['nullable', 'string', 'in:facebook,google,amazon,linkedin,github'],
             'password' => ['required_without:source', 'string', 'min:8'],
-            'company' => ['string'],
-            'token' => ['required_with:source', 'string'],
+            'company' => ['nullable', 'string'],
+            'token' => ['required_with:source', 'string', 'nullable'],
         ]);
     }
 
@@ -30,11 +30,11 @@ class ValidationHelper
     {
         return Validator::make($data, [
             'name' => ['required_without:password', 'string', 'max:255'],
-            'company' => ['string'],
+            'company' => ['nullable', 'string'],
             'email' => ['required', 'string', 'email', 'max:255'],
-            'source' => ['string', 'in:facebook,google,amazon,linkedin,github'],
+            'source' => ['nullable', 'string', 'in:facebook,google,amazon,linkedin,github'],
             'password' => ['required_without:source', 'string', 'min:8'],
-            'token' => ['required_with:source', 'string'],
+            'token' => ['nullable', 'required_with:source', 'string'],
         ]);
     }
 }
