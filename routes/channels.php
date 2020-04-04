@@ -18,5 +18,5 @@ Broadcast::channel('App.User.{id}', function ($user, $id) {
 });
 
 Broadcast::channel('presence-doc-{docId}', function ($user, $docId) {
-    return $user != null;
+    return $user->toArray();
 });

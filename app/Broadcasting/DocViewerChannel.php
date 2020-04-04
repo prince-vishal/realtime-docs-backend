@@ -22,6 +22,8 @@ class DocViewerChannel
      *
      * @param  \App\Models\User $user
      *
+     * @param Doc               $doc
+     *
      * @return array|bool
      */
     public function join(User $user, Doc $doc)
