@@ -89,6 +89,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function viewedDocs()
     {
-        return $this->belongsToMany(Doc::class, 'doc_viewers')->withTimestamps();
+        return $this->belongsToMany(Doc::class, 'doc_viewers')->withTimestamps()
+            ->orderBy('doc_viewers.updated_at', 'desc');;
     }
 }

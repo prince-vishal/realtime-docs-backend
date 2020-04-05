@@ -7,18 +7,29 @@ use App\Http\Controllers\Controller;
 use App\Modules\Docs\Models\Doc;
 use App\Modules\Docs\Requests\CreateDocRequest;
 use App\Responses\SuccessResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DocController extends Controller
 {
 
+    /**
+     * List all docs created by currently authenticated user
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function allDocs()
     {
         $docs = Doc::where(['owner_id' => Auth::id()])->orderBy('updated_at', 'desc')->get();
         return (new SuccessResponse($docs))->send();
     }
 
+    /**
+     * Show a doc by its id
+     *
+     * @param Doc $doc
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show(Doc $doc)
     {
         if (Auth::id() != $doc->owner_id) {
@@ -32,6 +43,25 @@ class DocController extends Controller
         return (new SuccessResponse($doc->viewers))->send();
     }
 
+
+    /**
+     * List all docs viewed by currently authenticated user
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function viewedDocs()
+    {
+        $user = Auth::user();
+        return (new SuccessResponse($user->viewedDocs))->send();
+    }
+
+    /**
+     * Create a new doc for currently authenticated user
+     *
+     * @param CreateDocRequest $request
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function create(CreateDocRequest $request)
     {
 
