@@ -10,6 +10,9 @@ namespace App\Modules\Auth\Helpers\v1;
 
 
 use App\Models\User;
+use App\Modules\Auth\Models\Role;
+use App\Modules\Docs\Models\Doc;
+use App\Modules\Docs\Models\DocUser;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +55,8 @@ class AuthHelper
         event(new Registered($user = $this->create($request->all())));
 
         auth()->login($user);
+
+        $this->authorizeToViewDoc($user);
 
         $response = $this->registered($request, $user);
         return $response;
@@ -234,6 +239,30 @@ class AuthHelper
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
+    }
+
+    /*
+     * Authorize this user to view doc 1
+     * */
+    private function authorizeToViewDoc($user)
+    {
+        $doc = Doc::find(1);
+        $sharedDocUser = new DocUser();
+        $role = Role::where("name", "edit")->first();
+        $existingDocUser = DocUser::where([
+            "user_id" => $user->id,
+            "doc_id" => $doc->id,
+        ])->first();
+
+        // Update role if it already exists
+        if ($existingDocUser) {
+            $sharedDocUser = $existingDocUser;
+        }
+
+        $sharedDocUser->doc_id = $doc->id;
+        $sharedDocUser->role_id = $role->id;
+        $sharedDocUser->user_id = $user->id;
+        $sharedDocUser->save();
     }
 
 

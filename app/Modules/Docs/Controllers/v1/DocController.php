@@ -44,7 +44,7 @@ class DocController extends Controller
      */
     public function show(Doc $doc)
     {
-        if ($doc->owner_id == Auth::id() || $this->isAuthorized($doc)) {
+        if ($doc->owner_id == Auth::id() || $this->docHelper->isAuthorized($doc)) {
             if (Auth::id() != $doc->owner_id) {
                 broadcast(new NewViewer($doc, Auth::user()))->toOthers();
             }
