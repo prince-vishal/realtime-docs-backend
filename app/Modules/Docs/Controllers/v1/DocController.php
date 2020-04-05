@@ -8,6 +8,7 @@ use App\Modules\Auth\Models\Role;
 use App\Modules\Docs\Helpers\DocHelper;
 use App\Modules\Docs\Models\Doc;
 use App\Modules\Docs\Models\DocUser;
+use App\Modules\Docs\Requests\CreateDocRequest;
 use App\Modules\Docs\Requests\ShareDocRequest;
 use App\Responses\FailedResponse;
 use App\Responses\ForbiddenResponse;
@@ -75,11 +76,11 @@ class DocController extends Controller
     /**
      * Create a new doc for currently authenticated user
      *
-     * @param ShareDocRequest $request
+     * @param CreateDocRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create(ShareDocRequest $request)
+    public function create(CreateDocRequest $request)
     {
 
         $request = $request->validated();
