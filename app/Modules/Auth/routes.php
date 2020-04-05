@@ -4,12 +4,13 @@ use Illuminate\Support\Facades\Route;
 
 $namespace = 'App\Modules\Auth\Controllers\v1';
 $guardingMiddleware = ['auth:api', 'bindings','jwt.auth'];
-$prefix = 'auth/v1';
+$authPrefix = 'auth/v1';
+$usersPrefix = 'api/v1/users';
 // Guarded Routes
 Route::group(
     [
         'namespace' => $namespace,
-        'prefix' => $prefix,
+        'prefix' => $authPrefix,
         'middleware' => $guardingMiddleware
     ],
     function () {
@@ -22,11 +23,22 @@ Route::group(
 Route::group(
     [
         'namespace' => $namespace,
-        'prefix' => $prefix,
+        'prefix' => $authPrefix,
         'middleware' => ['bindings']
     ],
     function () {
         Route::post('/register', 'RegisterController@register');
         Route::post('/login', 'LoginController@login');
+    }
+);
+// Unguarded Routes
+Route::group(
+    [
+        'namespace' => $namespace,
+        'prefix' => $usersPrefix,
+        'middleware' => $guardingMiddleware
+    ],
+    function () {
+        Route::get('/', 'UsersController@listUserEmailsNames');
     }
 );

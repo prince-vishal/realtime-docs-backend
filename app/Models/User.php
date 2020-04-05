@@ -75,21 +75,34 @@ class User extends Authenticatable implements JWTSubject
 
 
     /**
-     * The docs that belong to the user.
+     * Get docs created by this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function ownedDocs()
+    public function docs()
     {
-        return $this->belongsToMany(Doc::class)->withPivot('role_id')->withTimestamps();
+        return $this->hasMany(Doc::class, 'owner_id');
     }
 
     /**
-     * Docs that are viewed by this user
+     * Get docs shared with this user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function accessibleDocs()
+    {
+        return $this->belongsToMany(Doc::class, 'doc_users')->withPivot(['role_id'])->withTimestamps()
+            ->orderBy('doc_viewers.updated_at', 'desc');
+    }
+
+    /**
+     * Get docs that are viewed by this user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function viewedDocs()
     {
         return $this->belongsToMany(Doc::class, 'doc_viewers')->withTimestamps()
-            ->orderBy('doc_viewers.updated_at', 'desc');;
+            ->orderBy('doc_viewers.updated_at', 'desc');
     }
 }

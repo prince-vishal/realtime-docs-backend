@@ -1,79 +1,51 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# ***PostMan Docs***
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## About the App
+Build a Presence service, similar to that of google docs, which shows people that are
+currently viewing a particular doc, history of all the past viewers of a doc.
+ This app has the following basic features:
+- A basic user registration and authentication system, with JWT support for API.
+- A page that contains the UI element/component (similar to the one shown
+  towards the left in the image above) to show the people who are currently viewing the
+  page. This page can only be accessed by registered users and authorized users.
+- **UI** has the following features:
+     1. You are able to see the registered name, email, avatar, etc on hovering over the
+     avatar of current viewers.
+     2. You are also able to see who all have visited the page in the past and the
+     last timestamp they visited the page.
+     3. You will see an error page when your are authenticated but not authorized to view the doc you are trying to acess.
+     4. **Only certain authorized users can view a doc**.
+     5. **You can share a doc using persons email id**.
+     5. **You can create a doc**.
 
-## About Laravel
+### Models
+- **User** : This is used to interact with the users table, and contains logic
+ for fetching relationships like "viewed docs","owned docs". 
+- **Doc** : This is used to interact with the docs table, and contains 
+logic for fetching relationships like "viewers","owner".
+- **DocViewer** : This is used to interact with the doc_viewers table, 
+and contains logic for maintaining viewers of a doc. "doc_viewers" is a pivot
+ table to maintain a Many to Many relationship between Doc and User(Viewer). 
+- **DocUser** : This is used to interact with the doc_users table, 
+and contains logic for maintaining users with which a Doc is shared with,along
+ with the access role assigned i.e edit or view. "doc_users" is a pivot
+ table to maintain a Many to Many relationship between Doc and User (Shared to). 
+  
+### **Deployment Details** 
+- #####Backend :
+    1. **Database** : Amazon RDS instance
+    2. **Server** : Heroku
+- ##### Frontend:
+    1. Hosted on Github pages
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### **API Documentation** :
+> [**Postman Docs API**](https://documenter.getpostman.com/view/6037135/SzYbyxVX?version=latest)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### App Link
+>[**Postman Docs**](https://theprincevishal.in/realtime-docs)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+ 
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-- [云软科技](http://www.yunruan.ltd/)
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Author
+[**Prince Sinha**](https://theprincevishal.in)

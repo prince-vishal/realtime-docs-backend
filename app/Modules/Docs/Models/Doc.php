@@ -18,14 +18,32 @@ class Doc extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    /**
+     * Get the json decoded data.
+     *
+     * @return array
+     */
+    public function getMetadataAttribute()
+    {
+        if ($this->attributes['metadata'] != null) {
+            return json_decode($this->attributes['metadata'], true);
+        }
+        return [];
+    }
 
     /**
-     * The users that belong to the role.
+     * Get the json decoded data.
+     *
+     * @return array
      */
-    public function users()
+    public function getDataAttribute()
     {
-        return $this->belongsToMany(User::class)->withPivot(['role_id'])->withTimestamps();
+        if ($this->attributes['data'] != null) {
+            return json_decode($this->attributes['data'], true);
+        }
+        return [];
     }
+
 
     public function getChannelNameAttribute()
     {

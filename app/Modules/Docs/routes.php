@@ -16,6 +16,8 @@ Route::group(
 
         Route::get('/', 'DocController@allDocs');
         Route::get('/viewed', 'DocController@viewedDocs');
+        Route::put('/{doc}/share', 'DocController@assignRolesToUserForADoc');
+        Route::get('/{doc}/is_authorized', 'DocController@checkIfAuthorized');
         Route::get('/{doc}', 'DocController@show');
         Route::get('/{doc}/viewers', 'DocController@showViewers');
         Route::post('/', 'DocController@create');
