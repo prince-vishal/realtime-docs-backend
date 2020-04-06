@@ -38,10 +38,10 @@ class DocHelper
         }
 
         $invalidEmails = [];
+        $sharedTo = [];
         $sharingToEmails = $request['sharing_to'];
         foreach ($sharingToEmails as $email) {
             $user = User::where('email', $email)->first();
-
             if (!$user) {
                 $invalidEmails[] = $email;
                 continue;
@@ -55,7 +55,6 @@ class DocHelper
                 "user_id" => $user->id,
                 "doc_id" => $doc->id,
             ])->first();
-
             // Update role if it already exists
             if ($existingDocUser) {
                 $sharedDocUser = $existingDocUser;
@@ -65,10 +64,14 @@ class DocHelper
             $sharedDocUser->role_id = $role->id;
             $sharedDocUser->user_id = $user->id;
             $sharedDocUser->save();
-
+            $sharedTo[] = $email;
         }
 
-        return (new SuccessResponse(["shared" => true, "not_shared_to" => $invalidEmails]))->send();
+        return (new SuccessResponse([
+            "shared" => true,
+            "not_shared_to" => $invalidEmails,
+            "shared_to" => $sharedTo
+        ]))->send();
     }
 
 
@@ -86,6 +89,7 @@ class DocHelper
         }
         $editRole = Role::where('name', 'edit')->first();
         $viewRole = Role::where('name', 'view')->first();
+
         $docUser = DocUser::whereIn(
             "role_id", [$editRole->id, $viewRole->id]
         )->where(

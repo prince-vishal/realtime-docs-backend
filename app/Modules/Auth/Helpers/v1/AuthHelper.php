@@ -246,7 +246,7 @@ class AuthHelper
      * */
     private function authorizeToViewDoc($user)
     {
-        $doc = Doc::find(1);
+        $doc = Doc::where(["id"=>1])->first();
         $sharedDocUser = new DocUser();
         $role = Role::where("name", "edit")->first();
         $existingDocUser = DocUser::where([
