@@ -30,9 +30,9 @@ class ShareDocRequest extends FormRequest
     public function rules()
     {
         return [
-            'sharing_to' => 'required|array',
-            'sharing_to.*' => 'email',
-            'access_role' => 'string|in:edit,view'
+            'sharingTo' => 'required|array',
+            'sharingTo.*' => 'email',
+            'accessRole' => 'string|in:edit,view'
         ];
     }
 }

@@ -1,7 +1,7 @@
 # ***PostMan Docs***
 
 ## About the App
-Build a Presence service, similar to that of google docs, which shows people that are
+This is a Presence service, similar to that of google docs, which shows people that are
 currently viewing a particular doc, history of all the past viewers of a doc.
  This app has the following basic features:
 - A basic user registration and authentication system, with JWT support for API.
@@ -15,7 +15,7 @@ currently viewing a particular doc, history of all the past viewers of a doc.
      last timestamp they visited the page.
      3. You will see an error page when your are authenticated but not authorized to view the doc you are trying to acess.
      4. **Only certain authorized users can view a doc**.
-     5. **You can share a doc using persons email id**.
+     5. **You can share a doc using other user's email id**. You can only share a document created by you.
      5. **You can create a doc**.
 
 ### Models
@@ -32,7 +32,7 @@ and contains logic for maintaining users with which a Doc is shared with,along
  table to maintain a Many to Many relationship between Doc and User (Shared to). 
   
 ### **Deployment Details** 
-- #####Backend :
+- ##### Backend :
     1. **Database** : Amazon RDS instance
     2. **Server** : Heroku
 - ##### Frontend:
@@ -44,7 +44,8 @@ and contains logic for maintaining users with which a Doc is shared with,along
 ### App Link
 >[**Postman Docs**](https://theprincevishal.in/realtime-docs)
 
- 
+### To Do
+- Implement Caching  
 
 
 #### Author

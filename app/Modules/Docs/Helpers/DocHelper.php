@@ -30,7 +30,7 @@ class DocHelper
 
         }
 
-        $accessRole = $request['access_role'];
+        $accessRole = $request['accessRole'];
         $role = Role::where("name", $accessRole)->first();
 
         if (!$role) {
@@ -39,7 +39,7 @@ class DocHelper
 
         $invalidEmails = [];
         $sharedTo = [];
-        $sharingToEmails = $request['sharing_to'];
+        $sharingToEmails = $request['sharingTo'];
         foreach ($sharingToEmails as $email) {
             $user = User::where('email', $email)->first();
             if (!$user) {
